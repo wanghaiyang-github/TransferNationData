@@ -1,0 +1,299 @@
+server:
+  port: 8801
+spring:
+  #����Դ����
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:orcl
+    username: shylims
+    password: shylims
+    # ��ʼ����С����С�����`
+    initialSize: 10
+    minIdle: 30
+    maxActive: 100
+    # ���û�ȡ���ӵȴ���ʱ��ʱ��
+    maxWait: 60000
+    # ���ü����òŽ���һ�μ�⣬�����Ҫ�رյĿ������ӣ���λ�Ǻ���
+    timeBetweenEvictionRunsMillis: 60000
+    # ����һ�������ڳ�����С�����ʱ�䣬��λ�Ǻ���
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+  quartz:
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: quartzScheduler
+            instanceId: AUTO
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+#����mybatis�������
+mybatis:
+  type-aliases-package: com.bazl.lims.transfer.model
+  mapper-locations: classpath:mappers/*.xml
+logging:
+  config: classpath:logback.xml
+transfer:
+  transferCaseActived: true
+  transferCaseIntervalSeconds: 60
+  transferPersonActived: false
+  transferPersonIntervalSeconds: 60
+  retrieveCaseSampleNoActived: false
+  retrieveCaseSampleNoSeconds: 90
+  retrievePersonSampleNoActived: false
+  retrievePersonSampleNoSeconds: 90
+  transferYstrActived: false
+  transferYstrIntervalSeconds: 3600
+  timeTaskType: "YSTR"
+  readCount: 20
+  transferNotInstoreActived: false
+  transferNotInstoreIntervalSeconds: 30
+  timeTaskNotInstoreType: "NOT_INSTORE"
+  readNotInstoreCount: 20
+  labServerNo: 110113000000
+  labServerName: 北京市顺义区公安司法鉴定中心
+  #retriveSampleNoUrl 本实验室国家库地址
+  queryNationDbNoUrl: http://14.60.76.191:9080/GdnaDataWebService/service/queryDataService?wsdl
+  #push message flag
+  needPushInstoreMsg: true
+  pushInstoreMsgUrl: http://14.168.81.132:8089/newLimsCenter/MobileNews/insertNews
+  ##################################
+  #lims version
+  limsVersion: 0
+  ##################################
+  #for xckyCallbackUrl
+  xckyCallbackURL_110000: 14.27.131.131:9080/xckyservice
+  xckyCallbackURL_110101: 10.11.6.170:9080/xckyservice
+  xckyCallbackURL_110102: 14.105.48.101:9080/xckyservice
+  xckyCallbackURL_110105: 14.112.37.69:9080/xckyservice
+  xckyCallbackURL_110106: 10.12.2.145:9080/xckyservice
+  xckyCallbackURL_110107: 14.136.4.142:9080/xckyservice
+  xckyCallbackURL_110108: 10.11.234.201:9080/xckyservice
+  xckyCallbackURL_110109: 14.144.41.172:9080/xckyservice
+  xckyCallbackURL_110111: 14.152.103.7:9080/xckyservice
+  xckyCallbackURL_110112: 14.160.40.239:9080/xckyservice
+  xckyCallbackURL_110113: 14.168.79.25:9080/xckyservice
+  xckyCallbackURL_110114: 14.177.82.250:9080/xckyservice
+  xckyCallbackURL_110115: 14.184.66.101:9080/xckyservice
+  xckyCallbackURL_110116: 10.13.98.13:9080/xckyservice
+  xckyCallbackURL_110117: 14.200.100.237:9080/xckyservice
+  xckyCallbackURL_110228: 14.209.124.17:9080/xckyservice
+  xckyCallbackURL_110229: 14.217.18.31:9080/xckyservice
+  xckyCallbackURL_110230: 14.27.131.131:9080/xckyservice
+  #xml filepath
+  createNationalLibrary2FileURL: D:\\Lims\\xmlTest\\
+  failedPath: D:\\Lims\\xmlTest\\Failed
+  processedPath: D:\\Lims\\xmlTest\\Processed
+# 默认案件性质: 不详
+
+caseinfo:
+  #################################
+  #外部系统类型代码
+  externalSysTypeXk: "1"
+  externalSysTypeJz: "2"
+  externalSysTypeJq: "3"
+  externalSysTypeXz: "4"
+  externalSysTypeWms: "5"
+  externalSysTypeQt: "99"
+  #################################
+  #国家库案件类型
+  defaultCaseType: "1"
+  #刑事
+  caseTypeCriminal: "1"
+  #非刑事
+  caseTypeNotCriminal: "2"
+  #民事
+  caseTypeCivil: "3"
+  #################################
+  # 国家库案件性质
+  defaultCaseProperty: "99"
+  casePropertyBuXiang: "00"
+  casePropertyShaRen: "01"
+  casePropertyQiangJian: "02"
+  casePropertyLunJian: "21"
+  casePropertyDaoQie: "08"
+  casePropertyShangHai: "09"
+  casePropertyQiangjie: "05"
+  casePropertySuiShi: "03"
+  casePropertyQiangJianShaRen: "12"
+  casePropertyBaoZha: "04"
+  casePropertyMinShi: "06"
+  casePropertyJiaoTong: "07"
+  casePropertyZongHuo: "10"
+  casePropertyTouDu: "11"
+  casePropertyDuPin: "14"
+  casePropertyYiWai: "15"
+  casePropertyBangJia: "16"
+  casePropertyJieChi: "17"
+  casePropertyZhaPian: "18"
+  casePropertyFenShi: "19"
+  casePropertyQiaoZhaLeSuo: "22"
+  casePropertyQiTa: "99"
+  #################################
+  # 国家库案件状态
+  #默认
+  caseStatusDefault: 1
+  #未破案
+  caseStatusNotSolved: 1
+  #有比中
+  caseStatusMatched: 2
+  #已破案
+  caseStatusSolved: 3
+  #################################
+  # 国家库委托类型
+  #案件
+  consignmentTypeDefault: 1
+  consignmentTypeCase: 1
+  #身份不明人员
+  consignmentTypeUnknown: 2
+  #失踪人口
+  consignmentTypeMissing: 3
+  #建库
+  consignmentTypePerson: 4
+  #灾难
+  consignmentTypeDisaster: 5
+  #################################
+  # 国家库证件类型
+  #身份证
+  credentialTypeDefault: 1
+  credentialTypeIdcard: 1
+  #军人
+  credentialTypeSoldier: 3
+  #护照
+  credentialTypePassport: 2
+  #警官证
+  credentialTypePolicer: 5
+  #其它
+  credentialTypeOther: 6
+  #################################
+  # 物证承载物类型
+  evidenceCarrierTypeDefault: 9
+  evidenceCarrierTypeOther: 9
+  # 血卡
+  evidenceCarrierTypeBlood: 8
+  # 唾液卡
+  evidenceCarrierTypeSaliva: 19
+  #################################
+  # 样本类型
+  sampleTypeDefault: 99
+  sampleTypeOther: 99
+  # 血斑/血液
+  sampleTypeBlood: "01"
+  # 精斑
+  sampleTypeSperm: "02"
+  # 毛发
+  sampleTypeHairs: "03"
+  # 唾液（斑）
+  sampleTypeSaliva: "06"
+  # 骨骼/牙齿
+  sampleTypeSkeleton: "07"
+  # 脱落细胞
+  sampleTypeCells: "11"
+  # 肌肉（组织）
+  sampleTypeTissue: "08"
+  #################################
+  # 国家库案件级别
+  caseLevelDHefault: ""
+  # 严重暴力
+  caseLevelSerious: "1"
+  # 特大
+  caseLevelLarge: "2"
+  # 重大
+  caseLevelMajor: "3"
+  # 一般
+  caseLevelGeneral: "4"
+  # 轻微
+  caseLevelSlight: "5"
+  # 其他
+  caseLevelOther: "6"
+#
+convertmaps:
+ oldLimsCasePropertyMap:
+  #凶杀
+  1: "01"
+  #伤害
+  2: "09"
+  #其他盗窃
+  3: "08"
+  #入室盗窃
+  13: "08"
+  #入室盗窃（划片开锁）
+  13-1: "08"
+  #盗窃机动车
+  14: "08"
+  #盗窃车内财物
+  15: "08"
+  #爬楼钻窗
+  17: "08"
+  #盗窃保险柜
+  18: "08"
+  #抢夺抢劫
+  4: "05"
+  #强奸
+  5: "02"
+  #交通
+  10: "07"
+  #诈骗
+  19: "18"
+  #走失人口
+  6: "99"
+  #治安
+  8: "99"
+  #其他
+  9: "99"
+  #打拐
+  11: "99"
+  #尸源认定
+  12: "99"
+ newLimsCasePropertyMap:
+  #凶杀
+  01: "01"
+  #伤害致死
+  07: "01"
+  #伤害
+  02: "09"
+  #其他盗窃
+  03: "08"
+  #入室盗窃
+  13: "08"
+  #入室盗窃（划片开锁）
+  13-1: "08"
+  #盗窃车内财物
+  15: "08"
+  #盗抢工地
+  16: "08"
+  #爬楼钻窗
+  17: "08"
+  #盗窃保险柜
+  18: "08"
+  #抢夺
+  22: "05"
+  #抢劫
+  04: "05"
+  #强奸
+  05: "02"
+  #交通事故
+  11: "07"
+  #诈骗
+  21: "18"
+  #走失人口
+  09: "99"
+  #非正常死亡
+  06: "99"
+  #治安
+  08: "99"
+  #其它
+  20: "99"
+  #打拐
+  10: "99"
+  #尸源认定
+  12: "99"
+  #亲缘
+  19: "99"

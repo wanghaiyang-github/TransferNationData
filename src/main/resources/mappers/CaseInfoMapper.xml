@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bazl.lims.transfer.dao.CaseInfoMapper">
+
+  <select id="selectCaseInfoModelByCaseId"
+          parameterType="java.lang.String" resultType="com.bazl.lims.transfer.model.po.CaseInfoModel">
+    <![CDATA[
+         	select
+         		   ci.case_id                as id,
+			       cbi.case_sn				  as caseNo,
+			       cbi.case_name              as caseName,
+			       cbi.associate_system_sn    as externalSysNo,
+			       cbi.CASE_XK_SN             as caseXkSn,
+			       cbi.CASE_OLD_SN            as caseOldSn,
+			       cbi.case_time              as occurrenceDate,
+			       cbi.case_address           as sceneRegionalism,
+			       cbi.case_address_full_name as scenePlace,
+			       cbi.case_level             as caseLevel,
+			       cbi.case_digest            as caseSummary,
+			       ci.case_base_info_id      as caseBaseId,
+			       ci.case_handle_type       as caseType,
+			       ci.case_type              as caseProperty,
+			       ci.case_status            as caseStatus,
+			       ci.delegator			  as createUser,
+			       ci.create_at			  as createDatetime,
+			       ci.acceptor as acceptor,
+			       e.FULLNAME as acceptorName,
+			       ci.acceptor				  as updateUser,
+			       ci.ACCEPT_AT			  as updateDatetime,
+			       ci.EXTERNAL_INFO_TYPE     as externalSysType,
+			       ci.xk_delegate_sn         as xckyConsignNo,
+			       ci.DELEGATE_ORG           as delegateOrgCode
+         	from case_info@link2lims ci
+         	  left join EMPLOYEE@link2lims e on e.ID=ci.acceptor ,case_base_info@link2lims cbi
+         	where ci.case_base_info_id = cbi.id  and ci.case_id=#{_parameter, jdbcType=VARCHAR}
+         ]]>
+  </select>
+
+  <select id="selectNewCaseInfoModelByCaseId"
+          parameterType="java.lang.String" resultType="com.bazl.lims.transfer.model.po.CaseInfoModel">
+      <![CDATA[
+         	select
+         		   ci.case_id                as id,
+			       ci.CASE_NO				  as caseNo,
+			       ci.case_name              as caseName,
+			       ''    as externalSysNo,
+			       ci.CASE_XK_NO             as caseXkSn,
+			       ci.XK_ANO            as caseOldSn,
+			       ci.CASE_DATETIME              as occurrenceDate,
+			       cbi.AREA_ORG_CODE           as sceneRegionalism,
+			       ci.CASE_LOCATION as scenePlace,
+			       ci.case_level             as caseLevel,
+			       ci.CASE_BRIEF            as caseSummary,
+			       ci.CASE_TYPE       as caseType,
+			       ci.CASE_PROPERTY              as caseProperty,
+			       ci.case_status            as caseStatus,
+			       cbi.DELEGATOR1_NAME			  as createUser,
+			       cbi.CREATE_DATETIME			  as createDatetime,
+			       api.FULL_NAME as acceptorName,
+			       api.FULL_NAME				  as updateUser,
+			       cbi.ACCEPT_DATETIME			  as updateDatetime,
+			       ci.CONSIGNATION_XK_NO         as xckyConsignNo,
+			       cbi.DELEGATE_ORG_CODE           as delegateOrgCode
+         	from LIMS_CASE_INFO@newlims ci
+              left join LIMS_CONSIGNMENT_INFO@newlims cbi on ci.case_id = cbi.CASE_ID
+         	  left join AM_PERSONAL_INFO@newlims api on api.PERSONAL_ID=cbi.ACCEPTOR_ID
+         	where ci.case_id=#{_parameter, jdbcType=VARCHAR}
+         ]]>
+  </select>
+
+  <select id="selectConsignmentModelByCaseId"
+          parameterType="java.lang.String" resultType="com.bazl.lims.transfer.model.po.ConsignmentModel">
+    <![CDATA[
+         	select
+         		   cbi.case_sn              as acceptNo,
+         		   ci.case_id              as eventId,
+			       ci.case_handle_type     as category,
+			       ci.DELEGATE_ORG         as agencyRegionalism,
+                   di.name as agencyName,
+			       ci.xk_delegate_sn       as consignmentNo,
+			       ci.DELEGATE_ORG_POST_NO as consignOrgZipCode,
+			       ci.DELEGATE_ORG_ADDRESS as consignOrgAddress,
+			       ci.DELEGATOR            as consignerName,
+			       ci.DELEGATOR_PHONE      as consignerPhone,
+			       ci.CREDENTIAL_TYPE      as consignerCertificateType,
+			       ci.DELEGATE_CARD_ID        as consignerCertificateNo,
+			       ci.DELEGATOR2           as consignerName2,
+			       ci.DELEGATE_PHONE       as consignerPhone2,
+			       ci.CREDENTIAL_TYPE2     as consignerCertificateType2,
+			       ci.DELEGATE_CARD_ID2       as consignerCertificateNo2,
+			       ci.accept_org           as acceptRegionalism,
+			       ci.identify_required    as identifiyRequest,
+			       ci.DELEGATE_ORG_PHONE   as agencyPhone,
+			       ci.DELEGATE_ORG_FAX_NO  as consignOrgFaxNo,
+			       ci.DELEGATE_AT          as consignDate,
+			       ci.POSITION             as consignerDuty,
+			       ci.POSITION2            as consignerDuty2,
+			       ci.ACCEPT_AT            as acceptDatetime,
+			       ci.acceptor             as receptionManId,
+			       e.FULLNAME as receptionManName,
+			       ci.ACCEPT_ORG           as acceptOrgName,
+			       ci.ACCEPT_ORG_PHONE     as acceptOrgPhone,
+			       ci.IS_CASE_APPEND       as isAppend,
+			       ci.DELEGATOR             as createUser,
+			       ci.create_at            as createDatetime,
+			       e.FULLNAME             as updateUser,
+			       ci.ACCEPT_AT            as updateDatetime
+         	from case_info@link2lims ci
+         	          left join dict_item@link2lims di on di.code=ci.DELEGATE_ORG and di.DICT_INFO_ID='SUB_UNIT_CODE'
+         	          left join EMPLOYEE@link2lims e on e.ID=ci.acceptor,
+         	      case_base_info@link2lims cbi
+         	where ci.case_base_info_id = cbi.id and ci.case_id=#{_parameter, jdbcType=VARCHAR}
+         ]]>
+  </select>
+
+  <select id="selectNewConsignmentModelByCaseId"
+          parameterType="java.lang.String" resultType="com.bazl.lims.transfer.model.po.ConsignmentModel">
+     <![CDATA[
+      select
+         		   ci.CASE_NO              as acceptNo,
+         		   ci.case_id              as eventId,
+                   cbi.CONSIGNMENT_ID as id,
+			       ci.CASE_TYPE     as category,
+			       substr(cbi.DELEGATE_ORG_CODE,1,6)         as agencyRegionalism,
+                   cbi.DELEGATE_ORG_NAME as agencyName,
+			       ci.CONSIGNATION_XK_NO       as consignmentNo,
+			       cbi.DELEGATE_ORG_ZIP_CODE as consignOrgZipCode,
+			       cbi.DELEGATE_ORG_ADDRESS as consignOrgAddress,
+			       cbi.DELEGATOR1_NAME            as consignerName,
+			       cbi.DELEGATOR1_PHONE_NUMBER      as consignerPhone,
+			       cbi.DELEGATOR1_PAPERWORK_TYPE      as consignerCertificateType,
+			       cbi.DELEGATOR1_PAPERWORK_NO        as consignerCertificateNo,
+			       cbi.DELEGATOR2_NAME           as consignerName2,
+			       cbi.DELEGATOR2_PHONE_NUMBER       as consignerPhone2,
+			       cbi.DELEGATOR2_PAPERWORK_TYPE     as consignerCertificateType2,
+			       cbi.DELEGATOR2_PAPERWORK_NO       as consignerCertificateNo2,
+			       cbi.ACCEPT_ORG_ID           as acceptRegionalism,
+			       cbi.IDENTIFY_REQUIREMENT    as identifiyRequest,
+			       ''   as agencyPhone,
+			       cbi.DELEGATE_ORG_FAX_NO  as consignOrgFaxNo,
+			       cbi.DELEGATE_DATETIME          as consignDate,
+                   di_1.dict_name             as consignerDuty,
+                   di_2.dict_name            as consignerDuty2,
+			       cbi.ACCEPT_DATETIME            as acceptDatetime,
+			       cbi.ACCEPTOR_ID             as receptionManId,
+			       api_1.FULL_NAME as receptionManName,
+			       oi.ORG_NAME           as acceptOrgName,
+			       ''     as acceptOrgPhone,
+			       cbi.APPEND_FLAG       as isAppend,
+			       cbi.DELEGATOR1_NAME             as createUser,
+			       cbi.CREATE_DATETIME            as createDatetime,
+			       api_1.FULL_NAME             as updateUser,
+			       cbi.ACCEPT_DATETIME            as updateDatetime
+         	from LIMS_CASE_INFO@newlims ci
+              left join LIMS_CONSIGNMENT_INFO@newlims cbi on ci.case_id = cbi.CASE_ID
+         	  left join AM_PERSONAL_INFO@newlims api_1 on api_1.PERSONAL_ID=cbi.ACCEPTOR_ID
+         	  left join ORG_INFO@newlims oi on oi.ORG_CODE = cbi.ACCEPT_ORG_ID
+         	  left join DICT_ITEM@newlims di_1 on di_1.DICT_CODE = cbi.DELEGATOR1_POSITION and di_1.DICT_TYPE_CODE = 'POSITION_LIST'
+         	  left join DICT_ITEM@newlims di_2 on di_2.DICT_CODE = cbi.DELEGATOR2_POSITION and di_2.DICT_TYPE_CODE = 'POSITION_LIST'
+         	where ci.case_id=#{_parameter, jdbcType=VARCHAR}
+     ]]>
+  </select>
+
+  <select id="selectConsignmentIdByCaseId"
+          parameterType="java.lang.String" resultType="java.lang.String">
+    <![CDATA[
+         	select t.CONSIGNMENTID
+         	from case@link2dna t
+         	where t.CASEID=#{_parameter, jdbcType=VARCHAR}
+         ]]>
+  </select>
+
+  <update id="updateLabNoByCaseId" parameterType="com.bazl.lims.transfer.model.po.CaseInfoModel">
+       update
+          case@link2dna
+        set
+        LABNO= #{caseLabNo,jdbcType=VARCHAR}
+        where CASEID = #{caseId,jdbcType=VARCHAR}
+  </update>
+    <update id="updateLabNoByCaseId2" parameterType="com.bazl.lims.transfer.model.po.CaseInfoModel">
+       update
+          case@link2dna
+        set
+        LABNO= #{caseLabNo,jdbcType=VARCHAR}
+        where CASEID = #{caseId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateNewLabNoByCaseId" parameterType="com.bazl.lims.transfer.model.po.CaseInfoModel">
+       update
+          LIMS_CASE_INFO@newlims lci
+        set
+        lci.GJK_SYS_NO= #{caseLabNo,jdbcType=VARCHAR},
+        lci.INSTORED_DATETIME= sysdate
+        where lci.CASE_ID = #{caseId,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

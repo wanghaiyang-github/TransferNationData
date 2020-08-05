@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bazl.lims.transfer.dao.TimeTaskMapper">
+
+  <resultMap id="BaseResultMap" type="com.bazl.lims.transfer.model.po.TimeTask">
+    <id column="ID" jdbcType="VARCHAR" javaType="java.lang.String" property="id" />
+    <result column="TIME_TASK_TYPE" jdbcType="VARCHAR" javaType="java.lang.String" property="timeTaskType" />
+    <result column="TIME_COUNT" jdbcType="INTEGER" javaType="int" property="timeCount" />
+    <result column="START_COUNT" jdbcType="INTEGER" javaType="int" property="startCount" />
+    <result column="END_COUNT" jdbcType="INTEGER" javaType="int" property="endCount" />
+    <result column="READ_COUNT" jdbcType="INTEGER" javaType="int" property="readCount" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.bazl.lims.transfer.model.po.TimeTask">
+    insert into TIME_TASK(ID, TIME_TASK_TYPE, TIME_COUNT,
+      START_COUNT, END_COUNT, READ_COUNT)
+    values (#{id,jdbcType=VARCHAR}, #{timeTaskType,jdbcType=VARCHAR}, #{timeCount,jdbcType=INTEGER},
+      #{startCount,jdbcType=INTEGER}, #{endCount,jdbcType=INTEGER}, #{readCount,jdbcType=INTEGER})
+  </insert>
+
+  <update id="update" parameterType="com.bazl.lims.transfer.model.po.TimeTask">
+    update TIME_TASK
+    set TIME_TASK_TYPE=#{timeTaskType, jdbcType=VARCHAR},
+        TIME_COUNT=#{timeCount, jdbcType=INTEGER},
+        START_COUNT=#{startCount, jdbcType=INTEGER},
+        END_COUNT=#{endCount, jdbcType=INTEGER},
+        READ_COUNT=#{readCount, jdbcType=INTEGER}
+    where ID=#{id, jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectList" resultMap="BaseResultMap" parameterType="com.bazl.lims.transfer.model.po.TimeTask">
+    select * from TIME_TASK
+    where 1=1
+    <if test="timeTaskType != null and '' != timeTaskType">
+      and TIME_TASK_TYPE = #{timeTaskType, jdbcType=VARCHAR}
+    </if>
+  </select>
+
+</mapper>

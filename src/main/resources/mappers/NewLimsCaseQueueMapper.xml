@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bazl.lims.transfer.dao.NewLimsCaseQueueMapper">
+
+  <resultMap id="BaseResultMap" type="com.bazl.lims.transfer.model.po.TransferCaseQueue">
+    <id column="ID" jdbcType="VARCHAR" javaType="java.lang.String" property="id" />
+    <result column="FOREIGN_ID" jdbcType="VARCHAR" javaType="java.lang.String" property="caseId" />
+    <result column="SAMPLE_BARCODE" jdbcType="VARCHAR" javaType="java.lang.String" property="sampleBarcode" />
+    <result column="CASE_ID" jdbcType="VARCHAR" javaType="java.lang.String" property="caseId" />
+    <result column="STATUS" jdbcType="INTEGER" javaType="int" property="transferStatus" />
+    <result column="TRANSFER_FILE_NAME" jdbcType="VARCHAR" javaType="java.lang.String" property="transferFileName" />
+    <result column="FAILED_MSG" jdbcType="VARCHAR" javaType="java.lang.String" property="failedMsg" />
+    <result column="CREATE_DATETIME" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="UPDATE_DATETIME" jdbcType="TIMESTAMP" property="transferDatetime" />
+    <result column="LAB_SERVER_NO" jdbcType="VARCHAR" property="labServerNo" />
+    <result column="QUEUE_TYPE" jdbcType="VARCHAR" property="queueType" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    q.ID, q.FOREIGN_ID as SAMPLE_BARCODE, q.STATUS, q.CREATE_DATETIME, q.UPDATE_DATETIME,
+    q.QUEUE_TYPE, q.FILENAME as TRANSFER_FILE_NAME, q.FILENAME as FAILED_MSG,
+    q.SERVER_NO as LAB_SERVER_NO
+  </sql>
+
+  <select id="select" resultMap="BaseResultMap" parameterType="com.bazl.lims.transfer.model.po.TransferCaseQueue">
+    select
+      <include refid="Base_Column_List" />,
+    q.FOREIGN_ID as CASE_ID
+    from QUEUE_SAMPLE@newlims q
+    where q.STATUS=#{transferStatus, jdbcType=INTEGER}
+          and q.QUEUE_TYPE=#{queueType, jdbcType=VARCHAR}
+          and q.SERVER_NO=#{labServerNo, jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateStatus" parameterType="com.bazl.lims.transfer.model.po.TransferCaseQueue">
+    update QUEUE_SAMPLE@newlims
+    set STATUS=#{transferStatus, jdbcType=INTEGER},
+        FILENAME=#{transferFileName, jdbcType=VARCHAR},
+        UPDATE_DATETIME=#{transferDatetime, jdbcType=TIMESTAMP}
+    where ID=#{id, jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insertQueueType" parameterType="com.bazl.lims.transfer.model.po.TransferCaseQueue">
+    insert into QUEUE_SAMPLE@newlims(
+      ID,
+      FOREIGN_ID,
+      STATUS,
+      CREATE_DATETIME,
+      QUEUE_TYPE,
+      SERVER_NO
+    ) values (
+      #{id,jdbcType=VARCHAR},
+      #{caseId,jdbcType=VARCHAR},
+      #{transferStatus,jdbcType=INTEGER},
+      #{createDatetime,jdbcType=TIMESTAMP},
+      #{queueType,jdbcType=INTEGER},
+      #{labServerNo,jdbcType=VARCHAR}
+    )
+  </insert>
+
+  <insert id="insertQueueDetail" parameterType="com.bazl.lims.transfer.model.po.TransferCaseQueue">
+    insert into QUEUE_DETAIL@newlims(
+      ID, QUEUE_ID, SAMPLE_ID, SAMPLE_NO, CONSIGNMENT_ID, CREATE_DATETIME
+    ) values (
+      #{id,jdbcType=VARCHAR}, #{queueId,jdbcType=VARCHAR},  #{sampleId,jdbcType=VARCHAR}, #{sampleBarcode,jdbcType=VARCHAR},
+      #{caseId,jdbcType=VARCHAR}, #{createDatetime,jdbcType=TIMESTAMP}
+    )
+  </insert>
+
+</mapper>

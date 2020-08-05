@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bazl.lims.transfer.dao.TransferCaseQueueMapper">
+
+  <resultMap id="BaseResultMap" type="com.bazl.lims.transfer.model.po.TransferCaseQueue">
+    <id column="ID" jdbcType="VARCHAR" javaType="java.lang.String" property="id" />
+    <result column="CASE_ID" jdbcType="VARCHAR" javaType="java.lang.String" property="caseId" />
+    <result column="TRANSFER_STATUS" jdbcType="INTEGER" javaType="int" property="transferStatus" />
+    <result column="TRANSFER_FILE_NAME" jdbcType="VARCHAR" javaType="java.lang.String" property="transferFileName" />
+    <result column="FAILED_MSG" jdbcType="VARCHAR" javaType="java.lang.String" property="failedMsg" />
+    <result column="CREATE_DATETIME" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="CREATE_USER" jdbcType="VARCHAR" property="createUser" />
+    <result column="TRANSFER_DATETIME" jdbcType="TIMESTAMP" property="transferDatetime" />
+    <result column="LAB_SERVER_NO" jdbcType="VARCHAR" property="labServerNo" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    q.ID, q.CASE_ID, q.TRANSFER_STATUS, q.TRANSFER_FILE_NAME, q.FAILED_MSG, q.CREATE_DATETIME, q.CREATE_USER, q.TRANSFER_DATETIME, q.LAB_SERVER_NO, q.lab_server_no
+  </sql>
+
+  <select id="select" resultMap="BaseResultMap" parameterType="com.bazl.lims.transfer.model.po.TransferCaseQueue">
+    select
+      <include refid="Base_Column_List" />
+    from TRANSFER_CASE_QUEUE q
+    where q.TRANSFER_STATUS=#{transferStatus, jdbcType=INTEGER} and q.LAB_SERVER_NO=#{labServerNo, jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateStatus" parameterType="com.bazl.lims.transfer.model.po.TransferCaseQueue">
+    update TRANSFER_CASE_QUEUE
+    set TRANSFER_STATUS=#{transferStatus, jdbcType=INTEGER},
+        FAILED_MSG=#{failedMsg, jdbcType=VARCHAR},
+        TRANSFER_FILE_NAME=#{transferFileName, jdbcType=VARCHAR},
+        TRANSFER_DATETIME=#{transferDatetime, jdbcType=TIMESTAMP}
+    where ID=#{id, jdbcType=VARCHAR}
+  </update>
+
+</mapper>
